@@ -119,6 +119,13 @@ As in binary morphology, the composition of erosion and dilation allows defining
 (f \bullet B) = (f \oplus B) \ominus B
 \end{equation}
 
+\begin{figure*}[th!]
+	\centering
+	\includegraphics[width=\linewidth]{kernels}
+	\caption{Set of structuring elements (kernels) used for simulations. In dark, structural element's reference point.}
+	\label{fig:masks}
+\end{figure*}
+
 Also the mathematical properties of morphological grayscale operators match the ones of the corresponding binary operators. Consequently, the theoretical background of \cite{de2017detecting} remains valid also for in the grayscale domain. In particular, the following properties are exploited in the construction of the proposed detector:
 
 \begin{enumerate}[(i)]
@@ -154,18 +161,6 @@ Additionally, it is easy to see that the two theorems introduced in \cite{de2017
 	Let $I' = I \ominus K$, then $\forall M$ such that $\exists E | M \oplus E = K$, we have that $I' \bullet M = I'$. Respectively, if $I' = I \oplus K$, then $I' \circ M = I'$.
 \end{theorem}
 
-\begin{figure*}[h!]
-	\centering
-	\includegraphics[width=\linewidth]{kernels}
-	\caption{Set of structuring elements (kernels) used for simulations. In dark, structural element's reference point.}
-	\label{fig:masks}
-\end{figure*}
-\begin{figure*}[h]
-	\centering
-	\includegraphics[width=0.7\linewidth]{diagram1}
-	\caption{\textcolor{blue}{Proposed detection scheme for raw grayscale images. After opening/closing with a kernel K, if the image does not change, this means that it was previously dilated/eroded with that kernel (details in Section II.A). By applying the procedure for a set of possible masks, the detector is thus able to reveal a perfect match between the input eroded/dilated image and the corresponding opened/closed version.}}
-	\label{fig:scheme}
-\end{figure*}
 
 Theorem \ref{theorem_1} can be equivalently formulated in terms of series of erosion and dilation operators, according to the definition of open and close operators. Theorem \ref{theorem_2} extends the equality of Theorem \ref{theorem_1} to any kernel mask $M$ that can produce $K$ by dilation with an appropriate kernel $E$.
 
@@ -177,6 +172,13 @@ As an immediate consequence of the above theorems, an image dilated (eroded) wit
 \label{sec:method}
 
 In this section we introduce the proposed detector, distinguishing two cases: the detection of morphological filtering on raw images, and the detection in the presence of post-processing (e.g. compression, noise addition, filtering). We will see that the former is a trivial extension of the binary case but has very limited applicability, while the latter requires further attention.
+
+\begin{figure*}[t!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{diagram1}
+	\caption{\textcolor{blue}{Proposed detection scheme for raw grayscale images. After opening/closing with a kernel K, if the image does not change, this means that it was previously dilated/eroded with that kernel (details in Section II.A). By applying the procedure for a set of possible masks, the detector is thus able to reveal a perfect match between the input eroded/dilated image and the corresponding opened/closed version.}}
+	\label{fig:scheme}
+\end{figure*}
 
 \subsection{Filter Detection on Raw Images}
 
@@ -191,8 +193,8 @@ In the next section, we propose an extension of the above approach that is able 
 As mentioned in the previous section, any further processing on the filtered image will modify the pixel values, possibly re-introducing structures that were eliminated by the morphological operator. A further morphological filtering will then produce a non-null effect on the image, which will be revealed by the detector. It is therefore necessary to verify if some traces of the original filter survive the post-processing.
 \begin{figure*}[!ht]%
 	\centering
-	\includegraphics[width=0.8\linewidth]{morphological_example}
-	\caption{Histograms of differences before and after application of the open operator to an original image (grayscale version of `r22fa37aft.TIF' from RAISE-1k) and its dilated version. Both images have been JPEG compressed with $QF = 95$. The chart shows the first 50 bins in logarithmic scale. }
+	\includegraphics[width=0.75\linewidth]{morphological_example_compressed}
+	\caption{\textcolor{blue}{Histograms of differences before and after application of the close and open operators to an unprocessed image (grayscale version of `r3ba1827ft.TIF' from RAISE-1k) and its eroded and dilated versions, respectively. Both images have been JPEG compressed with $QF = 95$. Kernel mask 35 and the analysed windows size of $1000 \times 1000$ are used. The chart shows the first 50 bins in logarithmic scale. }}
 	\label{fig:differerence_histogram}
 \end{figure*}
 
